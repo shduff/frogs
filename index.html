@@ -9,44 +9,44 @@
 	<button id="reset">Reset</button>
 
 	<div id="quiz-container" class="container">
-		<div class="q" id="q1">
+		<div class="frog-q q" id="q1">
 			<h1>How would you describe your toxic level?</h1>
 			<label for="q1">I'm just honest</label>
-			<input type="radio" name="q1" class="blue">
+			<input type="radio" name="q1" class="frog blue">
 			<label for="q1">Only when I need to be</label>
-			<input type="radio" name="q1" class="tomato milk mimic">
+			<input type="radio" name="q1" class="frog tomato milk mimic">
 			<label for="q1">I'm not really toxic</label>
-			<input type="radio" name="q1" class="red glass">
+			<input type="radio" name="q1" class="frog red glass">
 		</div>
-		<div class="q" id="q2">
+		<div class="frog-q q" id="q2">
 			<h1>What is your outtake on life?</h1>
 			<label for="q2">go with the flow</label>
-			<input type="radio" name="q2" class="tomato mimic">
+			<input type="radio" name="q2" class="frog tomato mimic">
 			<label for="q2">i have strong goals i want to complete</label>
-			<input type="radio" name="q2" class="blue">
+			<input type="radio" name="q2" class="frog blue">
 			<label for="q2">i stress about it all the time</label>
-			<input type="radio" name="q2" class="glass milk">
+			<input type="radio" name="q2" class="frog glass milk">
 			<label for="q2">i'm not sure</label>
-			<input type="radio" name="q2" class="red">
+			<input type="radio" name="q2" class="frog red">
 		</div>
 		<button value="submit" id="quiz-button">submit</button>
 	</div>
 
 	<div id="journal-container" class="container invisible">
 		<section id="journal-panel">
-			<h1>Grow your frog!</h1>
+			<h1>You are a <span id="frogType">frog</span>!</h1>
 			<p>Answer journal prompts and your frog will grow and develop with your responses.</p>
-			<div class="q" id="1">
+			<div class="q journal-q" id="1">
 				<label for="1">what is your favorite color?</label>
 				<textarea name="1"></textarea>
 				<button value="submit">submit</button>
 			</div>
-			<div class="q invisible" id="2">
+			<div class="q journal-q invisible" id="2">
 				<label for="2">what is your favorite number?</label>
 				<textarea name="2"></textarea>
 				<button value="submit">submit</button>
 			</div>
-			<div class="q invisible" id="3">
+			<div class="q journal-q invisible" id="3">
 				<label for="3">what is your favorite breakfast cereal?</label>
 				<textarea name="3"></textarea>
 				<button value="submit">submit</button>
@@ -64,14 +64,49 @@
 	</div>
 
 	<script>
+		let frogScores = {
+			"tomato":0,
+			"milk":0,
+			"mimic":0,
+			"blue":0,
+			"red":0,
+			"glass":0
+		}
+		let frogNames = {
+			"tomato":"Tomato Frog",
+			"milk":"Milk Frog",
+			"mimic":"Mimic Frog",
+			"blue":"Blue Poison Dart Frog",
+			"red":"Red Eyes Tree Frog",
+			"glass":"Glass Frog"
+		}
 		let quizContainer = document.getElementById("quiz-container");
 		let journalContainer = document.getElementById("journal-container");
 
 		let resetButton = document.getElementById("reset");
+		// Whenever the reset button is clicked
 		resetButton.addEventListener("click", function() {
+			// Clear all information in localStorage
 			localStorage.clear();
+			// Swap the view back to the quiz
 			quizContainer.classList.remove("invisible");
 			journalContainer.classList.add("invisible");
+			// Uncheck all the quiz radio buttons
+			var elements = document.getElementsByTagName("input");
+			for (var i = 0; i < elements.length; i++) {
+				if (elements[i].type == "radio") {
+			    	elements[i].checked = false;
+			    }
+			}
+			// And reset all the frog scores to 0
+			frogScores = {
+				"tomato":0,
+				"milk":0,
+				"mimic":0,
+				"blue":0,
+				"red":0,
+				"glass":0
+			}
 		});
 
 		///////////////////////////////////////////////////////////
@@ -81,10 +116,37 @@
 		///////////////////////////////////////////////////////////
 
 		let quizButton = document.getElementById("quiz-button");
+		
+		// When the quiz's submit button is pressed
 		quizButton.addEventListener("click", function(b) {
+			// Grab all the user's answers
+			let answers = Array.from(document.querySelectorAll('input:checked'));
+			// Create an emty list to collect which frog to score
+			let frogsToScore = [];
+			// Go through the answers and add all the frogs to score by grabbing its classList, which includes the frogs that answer corresponds to
+			answers.forEach(e => frogsToScore.push(Array.from(e.classList)));
+			frogsToScore = frogsToScore.flat()
+			// But remove all the "frog" classes, since we are scoring by species
+			for (let i=0; i<frogsToScore.length; i++) { 
+			    if (frogsToScore[i] === "frog") { 
+			    	frogsToScore.splice(i, 1);
+			    }
+			}
+			// Tally up the points for each frog type
+			frogsToScore.forEach(f => frogScores[f]+=1);
+			// And then find the frog with the most points
+			const frogType = Object.entries(frogScores).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+			// Then save the frog type in localStorage
+			localStorage.setItem("frogType", frogType);
+			// And set the title of the journal page to reflect the frog type
+			document.getElementById("frogType").innerHTML = frogNames[frogType];
+
+			// Finally, hide the quiz and show the journal
 			quizContainer.classList.toggle("invisible");
 			journalContainer.classList.toggle("invisible");
 		});
+
+
 
 		///////////////////////////////////////////////////////////
 		//
@@ -101,7 +163,7 @@
 		}
 
 		// Grab all the questions from the page
-		let qs = document.getElementsByClassName("q");
+		let qs = document.getElementsByClassName("journal-q");
 
 		function fetchLocalStorage(key) {
 			if (localStorage.getItem(key) === null) {
@@ -112,6 +174,7 @@
 		}
 
 		window.addEventListener("load", (e) => {
+
 			let journalStorage = fetchLocalStorage("journal");
 			document.getElementById("entries").innerHTML = journalStorage;
 		});

@@ -1,0 +1,45 @@
+.q.invisible, #journal-container.invisible,#quiz-container.invisible {
+	display:none;
+}
+#reset {
+	position:fixed;
+	top:24px;
+	right:24px;
+}
+#journal-container {
+	display:grid;
+	grid-template-areas: 
+		"journal frog"
+		"log log";
+	gap:24px;
+}
+#journal-panel {
+	grid-area:journal;
+	background-color:lightpink;
+}
+#frog-panel {
+	grid-area:frog;
+	background-color:lightgreen;
+}
+#log-panel {
+	grid-area:log;
+	background-color:lightblue;
+}
+img {
+	max-width:100%;
+}
+section, .q {
+	display:flex;
+	flex-direction:column;
+}
+.q {
+	padding-bottom:12px;
+}
+textarea {
+	position:block;
+	height:100px;
+	width:40%;
+}
+button {
+	width:200px;
+}

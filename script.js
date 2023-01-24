@@ -265,6 +265,13 @@ function createQuiz(data) {
 		return frogDesc;
     }
 
+    // Create the "skip journaling" button to evolve the frog
+    document.getElementById("evolve-frog").addEventListener("click", function() {
+    	localStorage.setItem("cycleStep","6");
+    	updateJournalPage(fetchLocalStorage("cycleStep"))
+    	// console.log(fetchLocalStorage("cycleStep"))
+    });
+
     ///////////////////////////////////////////////////////////
     //
     // Generating the frog quiz using AirTable info
@@ -326,9 +333,9 @@ function createQuiz(data) {
     function updateJournalPage(cycleStep) {
     	document.getElementById("prompt").innerHTML = prompts[eval(cycleStep)-1];
     	frogImgs = allFrogImgs[fetchLocalStorage("frogType")];
-        document.getElementById("frog-img").src = eval(cycleStep) <= 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
+        document.getElementById("frog-img").src = eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
 
-        document.getElementById("frog-fact").innerHTML = eval(cycleStep) <= 6 ? frogFacts[eval(cycleStep)] : getCurrFrogDesc();
+        document.getElementById("frog-fact").innerHTML = eval(cycleStep) < 6 ? frogFacts[eval(cycleStep)] : getCurrFrogDesc();
     }
 
     // With all that data available, we're now going to start effectively saving state

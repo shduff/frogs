@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="favicon.png" type="image/x-icon"/>
 	<link rel="stylesheet" href="style.css">
+    <script src="airtable.browser.js"></script>
+	<!-- <script src="fetchData.js"></script> -->
 	<script src="script.js"></script>
 
 	<title>Which frog are you?</title>
@@ -14,57 +16,25 @@
 	<button id="reset">Reset</button>
 
 	<div id="quiz-container" class="container">
-		<div class="frog-q q" id="q1">
-			<h1>How would you describe your toxic level?</h1>
-			<label for="q1">I'm just honest</label>
-			<input type="radio" name="q1" class="frog blue">
-			<label for="q1">Only when I need to be</label>
-			<input type="radio" name="q1" class="frog tomato milk mimic">
-			<label for="q1">I'm not really toxic</label>
-			<input type="radio" name="q1" class="frog red glass">
-		</div>
-		<div class="frog-q q" id="q2">
-			<h1>What is your outtake on life?</h1>
-			<label for="q2">go with the flow</label>
-			<input type="radio" name="q2" class="frog tomato mimic">
-			<label for="q2">i have strong goals i want to complete</label>
-			<input type="radio" name="q2" class="frog blue">
-			<label for="q2">i stress about it all the time</label>
-			<input type="radio" name="q2" class="frog glass milk">
-			<label for="q2">i'm not sure</label>
-			<input type="radio" name="q2" class="frog red">
-		</div>
-		<button value="submit" id="quiz-button">submit</button>
 	</div>
 
 	<div id="journal-container" class="container invisible">
 		<section id="journal-panel">
 			<h1>You are a <span id="frogType">frog</span>!</h1>
 			<p>Answer journal prompts and your frog will grow and develop with your responses.</p>
-			<div class="q journal-q" id="1">
-				<label for="1">what is your favorite color?</label>
-				<textarea name="1"></textarea>
-				<button value="submit">submit</button>
-			</div>
-			<div class="q journal-q invisible" id="2">
-				<label for="2">what is your favorite number?</label>
-				<textarea name="2"></textarea>
-				<button value="submit">submit</button>
-			</div>
-			<div class="q journal-q invisible" id="3">
-				<label for="3">what is your favorite breakfast cereal?</label>
-				<textarea name="3"></textarea>
-				<button value="submit">submit</button>
+			<div id="journal-prompt">
+				<label id="prompt" for="prompt-response"></label>
+				<textarea name="prompt-response"></textarea>
+				<button id="journal-button" value="submit">submit</button>
 			</div>
 		</section>
 		<section id="frog-panel">
-			<img id="frog-img" src="https://media.istockphoto.com/id/172191851/photo/frog-spawn-in-a-puddle-next-to-a-trail.jpg?s=612x612&w=0&k=20&c=VxPQjoMS7MxWRdwRuL8pXoySAYRauWgsyw81wf8qLuk=" />
+			<img id="frog-img" src="" />
+			<p id="frog-fact"></p>
 		</section>
 		<section id="log-panel">
 			<h1>Your journal entries</h1>
-			<div id="entries">
-				
-			</div>
+			<div id="entries"></div>
 		</section>
 	</div>
 </body>

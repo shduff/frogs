@@ -135,7 +135,7 @@ function fetchData(callback) {
 			    // This function (`page`) will get called for each page of records.
 
 			    records.forEach(function(record) {
-			        frogFacts.push(record.get('Frog Fact By Step'));
+			        frogFacts.push(record.get('Frog Facts'));
 			    });
 
 			    // To fetch the next page of records, call `fetchNextPage`.
@@ -334,8 +334,9 @@ function createQuiz(data) {
     	document.getElementById("prompt").innerHTML = prompts[eval(cycleStep)-1];
     	frogImgs = allFrogImgs[fetchLocalStorage("frogType")];
         document.getElementById("frog-img").src = eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
-
-        document.getElementById("frog-fact").innerHTML = eval(cycleStep) < 6 ? frogFacts[eval(cycleStep)] : getCurrFrogDesc();
+        let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length) - 1;
+        console.log(randomFrogFact);
+        document.getElementById("frog-fact").innerHTML = eval(cycleStep) < 6 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
     }
 
     // With all that data available, we're now going to start effectively saving state
@@ -445,7 +446,9 @@ function createQuiz(data) {
             // Progress to the next frog image + cycleFact, until you reach the last frog
             if (eval(fetchLocalStorage("cycleStep")) < 6) {
             	frogImgDiv.src = frogImgs[eval(fetchLocalStorage("cycleStep"))];
-            	frogFactDiv.innerHTML = frogFacts[eval(fetchLocalStorage("cycleStep"))];
+            	let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length) + 1;
+            	console.log(randomFrogFact);
+            	frogFactDiv.innerHTML = frogFacts[randomFrogFact];
             } else {
             	frogImgDiv.src = frogImgs[6];
             	let frogDesc; 

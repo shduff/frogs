@@ -125,7 +125,7 @@ function fetchData(callback) {
 
 		// Grab all the frog facts and save it into frogFacts
 		let fetchFrogFacts = new Promise(resolve => {
-			let numFrogFacts = 6;
+			let numFrogFacts = 5;
 			let frogFacts = [];
 			base('frog facts').select({
 		    // Selecting the first 3 records in Grid view:
@@ -297,12 +297,12 @@ function createQuiz(data) {
 			if (q['answer' + j] != undefined) {
 				// And make the answers labeled radio buttons
 				let qLabel = document.createElement("label");
-				qLabel.setAttribute("for","q" + j);
+				qLabel.setAttribute("for","q" + n);
 				qLabel.innerHTML = q['answer' + j];
 
 				let qRadio = document.createElement("input");
 				qRadio.setAttribute("type","radio");
-				qRadio.setAttribute("name","q" + j);
+				qRadio.setAttribute("name","a" + n);
 				// Add all the classes to the radio input for scoring
 				qRadio.classList.add("frog");
 				q['frog'+j].split(" ").forEach(c => {

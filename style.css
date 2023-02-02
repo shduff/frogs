@@ -1,41 +1,101 @@
+body {
+	font-family:Quicksand, sans-serif;
+	font-weight:300;
+	font-size:1.2em;
+
+	--color1:#cbd4c2;
+	--color2:#cdd8df; 
+	--color3:#92b4a7; 
+	--color4:#e7decd; 
+	--color5:#8fb98d; 
+	--color6:#c5dac1;
+	--color7:#d6e5e3; 
+	--color8:#bcd0c7;
+	--gap:16px;
+
+	background-color:var(--color1);
+	color:black;
+	margin:var(--gap);
+}
+p {
+	margin:.25em 0;
+}
+h1 {
+	font-size:2.5em;
+	font-weight:700;
+	margin:.25em 0;
+}
+h2 {
+	font-size:1.5em;
+	font-weight:500;
+	margin:.15em 0;
+}
 #reset {
 	position:fixed;
 	top:24px;
 	right:24px;
 }
+#quiz-container {
+	background-color:var(--color3);
+	border-radius:var(--gap);
+	padding:var(--gap);
+}
+.intro {
+	font-size:1.1em;
+	padding-bottom:.5em;
+}
 #journal-container {
 	display:grid;
-	grid-template-areas: 
+	grid-template-areas:
 		"journal frog"
 		"log log";
 	gap:24px;
 }
+#journal-panel, #frog-panel, #log-panel {
+	background-color:var(--color3);
+	border-radius:var(--gap);
+	padding:var(--gap);
+}
 #journal-panel {
 	grid-area:journal;
-	background-color:lightpink;
+}
+.entryHeader {
+	display:flex;
+	flex-direction:row;
+	justify-content:space-between;
+	border-bottom:black dashed 1px;
+}
+.entry {
+	padding-bottom:var(--gap);
 }
 #frog-panel {
 	grid-area:frog;
-	background-color:lightgreen;
+}
+#frog-fact {
 }
 #log-panel {
 	grid-area:log;
-	background-color:lightblue;
+}
+a {
+	font-weight:500;
+	color:black;
 }
 img {
 	max-width:100%;
+	border-radius:var(--gap);
 }
 section, .q, #journal-prompt {
 	display:flex;
 	flex-direction:column;
 }
 .q {
-	padding-bottom:12px;
+	padding-bottom:var(--gap);
 }
 textarea {
 	position:block;
 	height:100px;
-	width:40%;
+	width:95%;
+	border-radius:6px;
 }
 button {
 	width:200px;

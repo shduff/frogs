@@ -292,9 +292,9 @@ function createQuiz(data) {
 		qDiv.classList.add("frog-q","q");
 		qDiv.id = "q" + n;
 		// Make the question a heading
-		let qH1 = document.createElement('h1');
-		qH1.innerHTML = q["question"];
-		qDiv.append(qH1);
+		let qH2 = document.createElement('h2');
+		qH2.innerHTML = q["question"];
+		qDiv.append(qH2);
 
 		let j = 1;
 		let qAnswers = [];
@@ -338,6 +338,7 @@ function createQuiz(data) {
     function updateJournalPage(cycleStep) {
     	let currFrogType = fetchLocalStorage("frogType");
         let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
+        localStorage.setItem("currPrompt",randomPrompt);
     	document.getElementById("prompt").innerHTML = prompts[randomPrompt];
     	frogImgs = allFrogImgs[currFrogType];
         document.getElementById("frog-img").src = eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
@@ -425,10 +426,17 @@ function createQuiz(data) {
     journalButton.addEventListener("click", function(b) {
         // If there is content in the button's associated text area
         if (b.srcElement.previousElementSibling.value != "") {
-            // Get the current date and time and use it to create a log entry title 
-            let date = new Date(Date.now()).toLocaleString();
+            // Get the current date and time and use it to create a log entry title
+            let entryHeader = document.createElement("div");
+            entryHeader.classList.add("entryHeader");
             let entryTitle = document.createElement("h2");
-            entryTitle.innerHTML = date;
+            entryTitle.innerHTML = prompts[fetchLocalStorage("currPrompt")];
+            let entryDate = document.createElement("p");
+            entryDate.classList.add("intro");
+            let date = new Date(Date.now()).toLocaleString();
+            entryDate.innerHTML = date;
+            entryHeader.append(entryTitle);
+            entryHeader.append(entryDate);
 
             // Grab the current textarea input and use it to create a log entry, and then delete the input so it will be empty next time   
             let content = b.srcElement.previousElementSibling.value;
@@ -439,7 +447,7 @@ function createQuiz(data) {
 
             // Store the date into local storage by appending to a string we can decode when you return to the page, so the current state can persist
             let journalStorage = fetchLocalStorage("journal");
-            let newJournalStorageEntry = entryTitle.outerHTML + entryContent.outerHTML;
+            let newJournalStorageEntry = entryHeader.outerHTML + entryContent.outerHTML;
             localStorage.setItem("journal", newJournalStorageEntry + journalStorage);
 
             // While we're saving state, also log which step in the frog evolution cycle we're on so we can return to it
@@ -449,7 +457,7 @@ function createQuiz(data) {
             let log = document.getElementById("entries");
             let entry = document.createElement("div");
             entry.classList.add("entry");
-            entry.append(entryTitle)
+            entry.append(entryHeader);
             entry.append(entryContent);
             log.prepend(entry);
 
@@ -468,6 +476,7 @@ function createQuiz(data) {
 
             // And choose a new, random journal prompt
             let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
+            localStorage.setItem("currPrompt",randomPrompt);
     		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
         };
 

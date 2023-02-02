@@ -5,10 +5,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="favicon.png" type="image/x-icon"/>
 	<link rel="stylesheet" href="style.css">
-    <script src="airtable.browser.js"></script>
-	<!-- <script src="fetchData.js"></script> -->
+	<script src="airtable.browser.js"></script>
 	<script src="script.js"></script>
-
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
 	<title>Which frog are you?</title>
 </head>
 <body>
@@ -16,14 +17,16 @@
 	<button id="reset">Reset</button>
 
 	<div id="quiz-container" class="container">
+		<h1>What kind of frog are you?</h1>
+		<p class="intro">Janelly: I assume you want some kind of intro/description of the quiz and what's to come here?</p>
 	</div>
 
 	<div id="journal-container" class="container invisible">
 		<section id="journal-panel">
 			<h1>You are a <span id="frogType">??? Frog</span>!</h1>
-			<p>Answer journal prompts and your frog will grow and develop with your responses. Or <a id="evolve-frog" href="#">skip ahead to see your frog type now</a> and journal later.</p>
+			<p class="intro">Answer journal prompts and your frog will grow and develop with your responses. Or <a id="evolve-frog" href="#">skip ahead to see your frog type now</a> and journal later.</p>
 			<div id="journal-prompt">
-				<label id="prompt" for="prompt-response"></label>
+				<h2><label id="prompt" for="prompt-response"></label></h2>
 				<textarea name="prompt-response"></textarea>
 				<button id="journal-button" value="submit">submit</button>
 			</div>

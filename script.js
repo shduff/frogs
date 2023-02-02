@@ -269,7 +269,6 @@ function createQuiz(data) {
     document.getElementById("evolve-frog").addEventListener("click", function() {
     	localStorage.setItem("cycleStep","6");
     	updateJournalPage(fetchLocalStorage("cycleStep"))
-    	// console.log(fetchLocalStorage("cycleStep"))
     });
 
     ///////////////////////////////////////////////////////////
@@ -331,11 +330,11 @@ function createQuiz(data) {
 
     // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
     function updateJournalPage(cycleStep) {
-    	document.getElementById("prompt").innerHTML = prompts[eval(cycleStep)-1];
+        let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length) - 1;
+    	document.getElementById("prompt").innerHTML = prompts[randomPrompt];
     	frogImgs = allFrogImgs[fetchLocalStorage("frogType")];
         document.getElementById("frog-img").src = eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
         let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length) - 1;
-        console.log(randomFrogFact);
         document.getElementById("frog-fact").innerHTML = eval(cycleStep) < 6 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
     }
 
@@ -443,17 +442,22 @@ function createQuiz(data) {
             entry.append(entryContent);
             log.prepend(entry);
 
+
             // Progress to the next frog image + cycleFact, until you reach the last frog
             if (eval(fetchLocalStorage("cycleStep")) < 6) {
             	frogImgDiv.src = frogImgs[eval(fetchLocalStorage("cycleStep"))];
             	let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length) + 1;
-            	console.log(randomFrogFact);
             	frogFactDiv.innerHTML = frogFacts[randomFrogFact];
+        		
             } else {
             	frogImgDiv.src = frogImgs[6];
             	let frogDesc; 
             	frogFactDiv.innerHTML = getCurrFrogDesc();
             }
+
+            // And choose a new, random journal prompt
+            let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length) - 1;
+    		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
         };
 
     }); 

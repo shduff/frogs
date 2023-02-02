@@ -15,7 +15,7 @@ body {
 
 	background-color:var(--color1);
 	color:black;
-	margin:var(--gap);
+	margin:calc(2 * var(--gap));
 }
 p {
 	margin:.25em 0;
@@ -32,8 +32,8 @@ h2 {
 }
 #reset {
 	position:fixed;
-	top:24px;
-	right:24px;
+	bottom:calc(3 * var(--gap));
+	right:calc(3 * var(--gap));
 }
 #quiz-container {
 	background-color:var(--color3);
@@ -49,7 +49,8 @@ h2 {
 	grid-template-areas:
 		"journal frog"
 		"log log";
-	gap:24px;
+	gap:calc(2 * var(--gap));
+	margin:auto;
 }
 #journal-panel, #frog-panel, #log-panel {
 	background-color:var(--color3);
@@ -58,6 +59,9 @@ h2 {
 }
 #journal-panel {
 	grid-area:journal;
+	width:60vw;
+	display:flex;
+	flex-direction:column;
 }
 .entryHeader {
 	display:flex;
@@ -70,8 +74,16 @@ h2 {
 }
 #frog-panel {
 	grid-area:frog;
+	width:30vw;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	border:1px solid black;
+	border-radius:var(--gap);
+	padding-bottom:var(--gap);
 }
-#frog-fact {
+#frog-fact, #frog-link {
+	padding:var(--gap);
 }
 #log-panel {
 	grid-area:log;
@@ -81,8 +93,9 @@ a {
 	color:black;
 }
 img {
-	max-width:100%;
-	border-radius:var(--gap);
+	width:30vw;
+	height:30vw;
+	border-radius:var(--gap) var(--gap) 0 0;
 }
 section, .q, #journal-prompt {
 	display:flex;
@@ -93,12 +106,19 @@ section, .q, #journal-prompt {
 }
 textarea {
 	position:block;
-	height:100px;
+	height:250px;
 	width:95%;
+	background-color:offwhite;
 	border-radius:6px;
+	margin:var(--gap) 0;
+	flex-flow:column;
 }
 button {
-	width:200px;
+	height:50px;
+	width:400px;
+	background-color:var(--color4);
+	font-size:1.5em;
+	border-radius:calc(var(--gap) / 2);
 }
 .q.invisible, #journal-container.invisible,#quiz-container.invisible {
 	display:none;

@@ -125,7 +125,7 @@ function fetchData(callback) {
 
 		// Grab all the frog facts and save it into frogFacts
 		let fetchFrogFacts = new Promise(resolve => {
-			let numFrogFacts = 5;
+			let numFrogFacts = 12;
 			let frogFacts = [];
 			base('frog facts').select({
 		    // Selecting the first 3 records in Grid view:
@@ -330,12 +330,16 @@ function createQuiz(data) {
 
     // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
     function updateJournalPage(cycleStep) {
-        let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length) - 1;
+        let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
     	document.getElementById("prompt").innerHTML = prompts[randomPrompt];
     	frogImgs = allFrogImgs[fetchLocalStorage("frogType")];
         document.getElementById("frog-img").src = eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
-        let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length) - 1;
+        let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length);
         document.getElementById("frog-fact").innerHTML = eval(cycleStep) < 6 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
+        // With the user's frogType
+        if (eval(fetchLocalStorage("cycleStep")) >= 6) {
+        	document.getElementById("frogType").innerHTML = frogNames[fetchLocalStorage("frogType")];
+        }
     }
 
     // With all that data available, we're now going to start effectively saving state
@@ -349,8 +353,6 @@ function createQuiz(data) {
         // Show the journal
         quizContainer.classList.add("invisible");
         journalContainer.classList.remove("invisible");
-        // With the user's frogType
-        document.getElementById("frogType").innerHTML = frogNames[fetchLocalStorage("frogType")];
         // Their journal entries
         document.getElementById("entries").innerHTML = fetchLocalStorage("journal");
         // And the correct journal prompt and frog image for the cycle step they left off at
@@ -387,7 +389,7 @@ function createQuiz(data) {
         // Then save the frog type in localStorage
         localStorage.setItem("frogType", frogType);
         // And set the title of the journal page to reflect the frog type
-        document.getElementById("frogType").innerHTML = frogNames[frogType];
+        // document.getElementById("frogType").innerHTML = frogNames[frogType];
         // Set the cycleStep to 1
         localStorage.setItem("cycleStep","1")
         // Update the journal page with the current frog image, fact, and journal prompt
@@ -456,10 +458,11 @@ function createQuiz(data) {
             }
 
             // And choose a new, random journal prompt
-            let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length) - 1;
+            let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
     		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
         };
 
+        updateJournalPage(fetchLocalStorage("cycleStep"));
     }); 
 }
 

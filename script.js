@@ -71,6 +71,7 @@ function fetchData(callback) {
 			        journalInfo.push({
 			        	"frog": record.get('Frog'),
 			        	"description": record.get('Description'),
+			        	"link": record.get('Link'),
 			        	"step1image": record.get('Step 1 Image'),
 			        	"step2image": record.get('Step 2 Image'),
 			        	"step3image": record.get('Step 3 Image'),
@@ -210,7 +211,12 @@ function createQuiz(data) {
     		6:i["step6image"][0]["url"],
     	}
     });
-    let frogImgs = 8;
+    let frogImgs;
+
+    let frogLinks = {};
+    data["journalInfo"].forEach(e => {
+    	frogLinks[e["frog"]] = e["link"];
+    });
 
     function fetchLocalStorage(key) {
         if (localStorage.getItem(key) === null) {
@@ -330,15 +336,18 @@ function createQuiz(data) {
 
     // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
     function updateJournalPage(cycleStep) {
+    	let currFrogType = fetchLocalStorage("frogType");
         let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
     	document.getElementById("prompt").innerHTML = prompts[randomPrompt];
-    	frogImgs = allFrogImgs[fetchLocalStorage("frogType")];
+    	frogImgs = allFrogImgs[currFrogType];
         document.getElementById("frog-img").src = eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
         let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length);
         document.getElementById("frog-fact").innerHTML = eval(cycleStep) < 6 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
         // With the user's frogType
         if (eval(fetchLocalStorage("cycleStep")) >= 6) {
-        	document.getElementById("frogType").innerHTML = frogNames[fetchLocalStorage("frogType")];
+        	document.getElementById("frogType").innerHTML = frogNames[currFrogType];
+        	document.getElementById("frog-link").setAttribute("href",frogLinks[currFrogType]);
+        	document.getElementById("frog-link").innerHTML = "Learn more about the " + frogNames[currFrogType];
         }
     }
 

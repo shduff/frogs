@@ -14,6 +14,7 @@ body {
 	--gap:16px;
 
 	background-color:var(--color1);
+	background-image:url("lilypad.png");
 	color:black;
 	margin:var(--gap);
 }
@@ -36,9 +37,10 @@ h2 {
 	right:calc(2 * var(--gap));
 }
 #quiz-container {
-	background-color:var(--color3);
+	background-color:var(--color6);
 	border-radius:var(--gap);
 	padding:var(--gap);
+	border:1px solid black;
 }
 .intro {
 	font-size:1.1em;
@@ -54,7 +56,7 @@ h2 {
 	margin:auto;
 }
 #journal-panel, #frog-panel, #log-panel {
-	background-color:var(--color3);
+	background-color:var(--color6);
 	border-radius:var(--gap);
 	padding:var(--gap);
 	border:1px solid black;

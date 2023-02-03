@@ -282,6 +282,25 @@ function createQuiz(data) {
     // Generating the frog quiz using AirTable info
     //
     ///////////////////////////////////////////////////////////
+	
+	function checkAllQuestionsAnswered(disabledEl) {
+    	let numQs = document.getElementsByClassName("frog-q").length;
+        var numAs = Array.from(document.getElementsByTagName("input"));
+    	let numCheckedAs = 0;
+    	numAs.forEach(a => {
+    		a.checked ? numCheckedAs++ : null;
+    	});
+    	console.log("numQs is ", numQs);
+    	console.log("numCheckedAs is ", numCheckedAs);
+    	console.log(numQs == numCheckedAs)
+    	return numCheckedAs == numQs ? disabledEl.removeAttribute("disabled") : false;
+    }
+
+    let qButton = document.createElement("button");
+	qButton.setAttribute("value","submit");
+	qButton.setAttribute("disabled",true);
+	qButton.id = "quiz-button";
+	qButton.innerHTML = "submit";
 
     // Go through each of the quiz questions
 	data["quizInfo"].forEach((q,i) => {
@@ -313,6 +332,9 @@ function createQuiz(data) {
 				q['frog'+j].split(" ").forEach(c => {
 					qRadio.classList.add(c);
 				});
+				qRadio.addEventListener("click", function() {
+					checkAllQuestionsAnswered(qButton)
+				});
 				qLabel.prepend(qRadio);
 				qAnswers.push(qLabel);
 			}
@@ -321,11 +343,7 @@ function createQuiz(data) {
 		}
 		quizContainer.append(qDiv);
 	});
-
-	let qButton = document.createElement("button");
-	qButton.setAttribute("value","submit");
-	qButton.id = "quiz-button";
-	qButton.innerHTML = "submit";
+	
 	quizContainer.append(qButton);
 
 	///////////////////////////////////////////////////////////

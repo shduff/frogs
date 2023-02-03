@@ -15,7 +15,7 @@ body {
 
 	background-color:var(--color1);
 	color:black;
-	margin:calc(2 * var(--gap));
+	margin:var(--gap);
 }
 p {
 	margin:.25em 0;
@@ -32,8 +32,8 @@ h2 {
 }
 #reset {
 	position:fixed;
-	bottom:calc(3 * var(--gap));
-	right:calc(3 * var(--gap));
+	bottom:calc(2 * var(--gap));
+	right:calc(2 * var(--gap));
 }
 #quiz-container {
 	background-color:var(--color3);
@@ -46,20 +46,21 @@ h2 {
 }
 #journal-container {
 	display:grid;
+	grid-template-columns:2fr 1fr;
 	grid-template-areas:
 		"journal frog"
 		"log log";
-	gap:calc(2 * var(--gap));
+	gap:var(--gap);
 	margin:auto;
 }
 #journal-panel, #frog-panel, #log-panel {
 	background-color:var(--color3);
 	border-radius:var(--gap);
 	padding:var(--gap);
+	border:1px solid black;
 }
 #journal-panel {
 	grid-area:journal;
-	width:60vw;
 	display:flex;
 	flex-direction:column;
 }
@@ -68,22 +69,21 @@ h2 {
 	flex-direction:row;
 	justify-content:space-between;
 	border-bottom:black dashed 1px;
+	align-items:baseline;
 }
 .entry {
 	padding-bottom:var(--gap);
 }
 #frog-panel {
 	grid-area:frog;
-	width:30vw;
 	display:flex;
 	flex-direction:column;
 	align-items:center;
-	border:1px solid black;
 	border-radius:var(--gap);
 	padding-bottom:var(--gap);
 }
 #frog-fact, #frog-link {
-	padding:var(--gap);
+	padding:var(--gap) 0;
 }
 #log-panel {
 	grid-area:log;

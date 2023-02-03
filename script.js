@@ -242,8 +242,10 @@ function createQuiz(data) {
                 elements[i].checked = false;
             }
         }
-        // Reset the journal to have no entries, in case of cache
+        // Reset the journal to have no entries and frogType title to ???, in case of cache
         document.getElementById("entries").innerHTML = fetchLocalStorage("journal");
+        document.getElementById("frogType").innerHTML = "??? Frog";
+        document.getElementById("frog-link").innerHTML = "";
         // And reset all the frog scores to 0
         frogScores = {
             "tomato": 0,

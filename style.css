@@ -114,6 +114,10 @@ textarea {
 	border-radius:6px;
 	margin:var(--gap) 0;
 	flex-flow:column;
+	font-size:1.5em;
+	font-family:Quicksand, sans-serif;
+	font-weight:300;
+	padding:calc(var(--gap) / 2) var(--gap);
 }
 button {
 	height:50px;

@@ -31,6 +31,9 @@ h2 {
 	font-weight:500;
 	margin:.15em 0;
 }
+h3 {
+	margin-bottom:0;
+}
 #reset {
 	position:fixed;
 	bottom:calc(2 * var(--gap));
@@ -126,6 +129,6 @@ button {
 	font-size:1.5em;
 	border-radius:calc(var(--gap) / 2);
 }
-.q.invisible, #journal-container.invisible,#quiz-container.invisible {
+.invisible, .q.invisible, #journal-container.invisible,#quiz-container.invisible {
 	display:none;
 }

@@ -295,14 +295,27 @@ function createQuiz(data) {
     	console.log("numQs is ", numQs);
     	console.log("numCheckedAs is ", numCheckedAs);
     	console.log(numQs == numCheckedAs)
-    	return numCheckedAs == numQs ? disabledEl.removeAttribute("disabled") : false;
+    	if (numCheckedAs == numQs) {
+    		disabledEl.removeAttribute("disabled");
+    		let divToHide = document.getElementById("disabled-quiz-button-alert");
+    		divToHide.classList.add("invisible");
+    	} 
     }
 
+	let qButtonDiv = document.createElement("div");
+	qButtonDiv.classList.add("button-container");
     let qButton = document.createElement("button");
 	qButton.setAttribute("value","submit");
 	qButton.setAttribute("disabled",true);
 	qButton.id = "quiz-button";
 	qButton.innerHTML = "submit";
+	let qButtonAlertDiv = document.createElement("div");
+	qButtonAlertDiv.id = "disabled-quiz-button-alert";
+	let qButtonAlertText = document.createElement("p");
+	qButtonAlertText.innerHTML = "✔️ You have to answer all the questions before submitting!";
+	qButtonAlertDiv.append(qButtonAlertText);
+	qButtonDiv.append(qButton,qButtonAlertDiv);
+
 
     // Go through each of the quiz questions
 	data["quizInfo"].forEach((q,i) => {
@@ -346,7 +359,7 @@ function createQuiz(data) {
 		quizContainer.append(qDiv);
 	});
 	
-	quizContainer.append(qButton);
+	quizContainer.append(qButtonDiv);
 
 	///////////////////////////////////////////////////////////
     //

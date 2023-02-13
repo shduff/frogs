@@ -218,14 +218,6 @@ function createQuiz(data) {
     	frogLinks[e["frog"]] = e["link"];
     });
 
-    function fetchLocalStorage(key) {
-        if (localStorage.getItem(key) === null) {
-            return "";
-        } else {
-            return localStorage.getItem(key);
-        };
-    }
-
     let quizContainer = document.getElementById("quiz-container");
     let journalContainer = document.getElementById("journal-container");
 
@@ -273,6 +265,20 @@ function createQuiz(data) {
 		return frogDesc;
     }
 
+	function fetchLocalStorage(key) {
+	    if (localStorage.getItem(key) === null) {
+	        return "";
+	    } else {
+	        return localStorage.getItem(key);
+	    };
+	}
+
+	function getCurrentTime() {
+		let time = new Date();
+	    time = time.toString().split(" ").slice(0,5).join(" ");
+	    return time;
+	}
+
     // Create the "skip journaling" button to evolve the frog
     document.getElementById("evolve-frog").addEventListener("click", function() {
     	localStorage.setItem("cycleStep","6");
@@ -294,7 +300,7 @@ function createQuiz(data) {
     	});
     	console.log("numQs is ", numQs);
     	console.log("numCheckedAs is ", numCheckedAs);
-    	console.log(numQs == numCheckedAs)
+    	console.log(numQs == numCheckedAs);
     	if (numCheckedAs == numQs) {
     		disabledEl.removeAttribute("disabled");
     		let divToHide = document.getElementById("disabled-quiz-button-alert");
@@ -302,8 +308,6 @@ function createQuiz(data) {
     	} 
     }
 
-	let qButtonDiv = document.createElement("div");
-	qButtonDiv.classList.add("button-container");
     let qButton = document.createElement("button");
 	qButton.setAttribute("value","submit");
 	qButton.setAttribute("disabled",true);
@@ -314,8 +318,6 @@ function createQuiz(data) {
 	let qButtonAlertText = document.createElement("p");
 	qButtonAlertText.innerHTML = "✔️ You have to answer all the questions before submitting!";
 	qButtonAlertDiv.append(qButtonAlertText);
-	qButtonDiv.append(qButton,qButtonAlertDiv);
-
 
     // Go through each of the quiz questions
 	data["quizInfo"].forEach((q,i) => {
@@ -359,7 +361,7 @@ function createQuiz(data) {
 		quizContainer.append(qDiv);
 	});
 	
-	quizContainer.append(qButtonDiv);
+	quizContainer.append(qButton,qButtonAlertDiv);
 
 	///////////////////////////////////////////////////////////
     //
@@ -384,6 +386,18 @@ function createQuiz(data) {
         	document.getElementById("frog-link").innerHTML = "Learn more about the " + frogNames[currFrogType];
         }
     }
+
+	function releaseNewJournalEntry() {
+		if (fetchLocalStorage("lastSubmitTime") != getCurrentTime()) {
+	    	document.getElementById("disabled-journal-button-alert").classList.toggle("invisible");
+	    	document.getElementById("journal-button").removeAttribute("disabled");
+	    	localStorage.setItem("lastSubmitTime",getCurrentTime());
+	    	updateJournalPage(fetchLocalStorage("cycleStep"));
+	    	clearTimeout(Number(fetchLocalStorage("intervalID")));
+	    	localStorage.removeItem("intervalID");
+	    	console.log("timeout!");
+	    }
+	};
 
     // With all that data available, we're now going to start effectively saving state
     // If there's no info in localStorage
@@ -457,6 +471,7 @@ function createQuiz(data) {
 
     let journalButton = document.getElementById("journal-button");
     journalButton.addEventListener("click", function(b) {
+
         // If there is content in the button's associated text area
         if (b.srcElement.previousElementSibling.value != "") {
             // Get the current date and time and use it to create a log entry title
@@ -494,13 +509,11 @@ function createQuiz(data) {
             entry.append(entryContent);
             log.prepend(entry);
 
-
             // Progress to the next frog image + cycleFact, until you reach the last frog
             if (eval(fetchLocalStorage("cycleStep")) < 6) {
             	frogImgDiv.src = frogImgs[eval(fetchLocalStorage("cycleStep"))];
             	let randomFrogFact = Math.floor(Math.random() * Object.keys(frogFacts).length) + 1;
             	frogFactDiv.innerHTML = frogFacts[randomFrogFact];
-        		
             } else {
             	frogImgDiv.src = frogImgs[6];
             	let frogDesc; 
@@ -510,11 +523,43 @@ function createQuiz(data) {
             // And choose a new, random journal prompt
             let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
             localStorage.setItem("currPrompt",randomPrompt);
-    		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
+    		document.getElementById("prompt").innerHTML = prompts[randomPrompt];	
         };
 
+        // Disable the submit button
+        b.target.setAttribute("disabled",true);
+        // And show the alert explaining why it's disabled
+        document.getElementById("disabled-journal-button-alert").classList.toggle("invisible");
+        // Store the current time in local storage
+        localStorage.setItem("lastSubmitTime",getCurrentTime());
+        // Then set a timer that compares current time to previous time til different
+    	let currIntervalID = setInterval(releaseNewJournalEntry,20000);
+    	localStorage.setItem("intervalID",currIntervalID);
+		console.log("timeout is set. the lastSubmitTime is ", fetchLocalStorage("lastSubmitTime"), " and the current time is", getCurrentTime());
+        // Then update the journal page
         updateJournalPage(fetchLocalStorage("cycleStep"));
     }); 
-}
+};
 
 fetchData(createQuiz);
+
+window.addEventListener("load", function() {
+	// If there is an uncleared setInterval, which means an Interval should be going
+	if (fetchLocalStorage("intervalID")) {
+		// Disable the journal submit button
+        document.getElementById("journal-button").setAttribute("disabled",true);
+        // And if the current time (i.e. date) is "less than" (i.e. after) the last submitted time
+		if (new Date(fetchLocalStorage("lastSubmitTime")) < Date(getCurrentTime())) {
+			// Then release a new journal entry
+			releaseNewJournalEntry();
+			localStorage.removeItem("intervalID");
+		// If the date is not "less than"/after the last submitted time
+		} else {
+			// Then set a timer that compares current time to previous time til different
+	    	let currIntervalID = setInterval(releaseNewJournalEntry,20000);
+	    	// And update the intervalID stored in localStorage
+	    	localStorage.setItem("intervalID",currIntervalID);
+	    	console.log("timeout is set. the lastSubmitTime is ", fetchLocalStorage("lastSubmitTime"), " and the current time is", getCurrentTime());
+		}
+	}
+});

@@ -350,7 +350,7 @@ function createQuiz(data) {
 		// Store the current time in local storage
 		localStorage.setItem("lastSubmitTime", getCurrentTime());
 		// Then set a timer that compares current time to previous time til different
-		let currIntervalID = setInterval(releaseNewJournalEntry, 20000);
+		let currIntervalID = setInterval(releaseNewJournalEntry, 10000);
 		localStorage.setItem("intervalID", currIntervalID);
 		console.log(
 			"timeout is set. the lastSubmitTime is ",

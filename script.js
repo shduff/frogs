@@ -29,17 +29,20 @@ function releaseNewJournalEntry(currPrompt=false) {
 // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
 function updateJournalPage(cycleStep, currPrompt=false) {
 	let currFrogType = fetchLocalStorage("frogType");
+	console.log("currPrompt is currently ",currPrompt)
 	if (currPrompt) {
+		document.getElementById("prompt").innerHTML = prompts[eval(fetchLocalStorage("currPrompt"))];
+		console.log("prompt should be set to ",prompts[eval(fetchLocalStorage("currPrompt"))])
+	} else {
 		let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
 		localStorage.setItem("currPrompt", randomPrompt);
 		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
-	} else {
-		document.getElementById("prompt").innerHTML = prompts[fetchLocalStorage("currPrompt")];
+		console.log("prompt should be set to ",prompts[randomPrompt])
 	};
 	frogImgs = allFrogImgs[currFrogType];
 	document.getElementById("frog-img").src =
 		eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
-	let randomFrogFact = Math.floor(
+	let randomFrogFact = Math.ceil(
 		Math.random() * Object.keys(frogFacts).length
 	);
 	document.getElementById("frog-fact").innerHTML =
@@ -229,6 +232,7 @@ function createQuiz(data) {
 	quizButton.addEventListener("click", function (b) {
 		// Set the cycleStep to 1
 		localStorage.setItem("cycleStep", "1");
+		console.log("cycleStep is 1");
 		// Grab all the user's answers
 		let answers = Array.from(document.querySelectorAll("input:checked"));
 		// Create an emty list to collect which frog to score

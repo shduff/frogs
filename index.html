@@ -1,53 +1,110 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" href="favicon.png" type="image/x-icon"/>
-	<link rel="stylesheet" href="style.css">
-	<script src="airtable.browser.js"></script>
-	<script src="script.js"></script>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
-	<title>Which frog are you?</title>
-</head>
-<body>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="favicon.png" type="image/x-icon" />
+		<link rel="stylesheet" href="style.css" />
+		<script src="airtable.browser.js"></script>
+		<script src="data.js"></script>
+		<script src="script.js"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<title>Which frog are you?</title>
+	</head>
+	<body>
+		<button id="reset">reset</button>
 
-	<button id="reset">reset</button>
+		<div id="quiz-container" class="container">
+			<h1>What kind of frog are you?</h1>
+			<p class="intro">
+				Janelly: I assume you want some kind of intro/description of the
+				quiz and what's to come here. What should it say?
+			</p>
+		</div>
 
-	<div id="quiz-container" class="container">
-		<h1>What kind of frog are you?</h1>
-		<p class="intro">Janelly: I assume you want some kind of intro/description of the quiz and what's to come here. What should it say?</p>
-	</div>
-
-	<div id="journal-container" class="container invisible">
-		<section id="journal-panel">
-			<h1>You are a <span id="frogType">??? Frog</span>!</h1>
-			<p class="intro">Come back daily to answer journal prompts. Your frog will grow and develop with your responses, revealing its type, color, and other qualities day by day. Or <a id="evolve-frog" href="#">skip ahead</a> to see your frog type now and journal later.</p>
-			<div id="journal-prompt">
-				<h2><label id="prompt" for="prompt-response"></label></h2>
-				<textarea name="prompt-response"></textarea>
-				<button id="journal-button" value="submit">submit</button>
-				<div id="disabled-journal-button-alert" class="invisible">
-					<p>⏳ A new journal prompt will be available tomorrow. Come back then! ⏳</p>
+		<div id="journal-container" class="container invisible">
+			<section id="journal-panel">
+				<h1>You are a <span id="frogType">??? Frog</span>!</h1>
+				<p class="intro">
+					Come back daily to answer journal prompts. Your frog will
+					grow and develop with your responses, revealing its type,
+					color, and other qualities day by day. Or
+					<a id="evolve-frog" href="#">skip ahead</a> to see your frog
+					type now and journal later.
+				</p>
+				<div id="journal-prompt">
+					<h2><label id="prompt" for="prompt-response"></label></h2>
+					<textarea name="prompt-response"></textarea>
+					<button id="journal-button" value="submit">submit</button>
+					<div id="disabled-journal-button-alert" class="invisible">
+						<p>
+							⏳ A new journal prompt will be available tomorrow.
+							Come back then! ⏳
+						</p>
+					</div>
 				</div>
-			</div>
-		</section>
-		<section id="frog-panel">
-			<div id="frog-content">
-				<img id="frog-img" src="" />
-				<h3>Did you know?!</h3>
-				<p id="frog-fact"></p>
-				<a id="frog-link" href=""></a>
-			</div>
-		</section>
-		<section id="log-panel">
-			<h1>Your journal entries</h1>
-			<p class="intro">Janelly: We should put some text here to describe what will show up here, so people know what's happening before they've saved any journal entries. What should it say?</p>
-			<div id="entries">
-			</div>
-		</section>
-	</div>
-</body>
+			</section>
+			<section id="frog-panel">
+				<div id="frog-content">
+					<img id="frog-img" src="" />
+					<h3>Did you know?!</h3>
+					<p id="frog-fact"></p>
+					<a id="frog-link" href=""></a>
+				</div>
+			</section>
+			<section id="log-panel">
+				<h1>Your journal entries</h1>
+				<p class="intro">
+					Janelly: We should put some text here to describe what will
+					show up here, so people know what's happening before they've
+					saved any journal entries. What should it say?
+				</p>
+				<div id="entries"></div>
+			</section>
+		</div>
+
+		<script>
+			window.addEventListener("load", function () {
+				fetchData((data) => {
+					createQuiz(data);
+					// If there is an uncleared setInterval, which means an Interval should be going
+					if (fetchLocalStorage("intervalID") !== "") {
+						// Disable the journal submit button
+						document
+							.getElementById("journal-button")
+							.setAttribute("disabled", true);
+						// And if the current time (i.e. date) is "less than" (i.e. after) the last submitted time
+						if (
+							new Date(fetchLocalStorage("lastSubmitTime")) <
+							Date(getCurrentTime())
+						) {
+							// Then release a new journal entry
+							releaseNewJournalEntry();
+							localStorage.removeItem("intervalID");
+							// If the date is not "less than"/after the last submitted time
+						} else {
+							// Then set a timer that compares current time to previous time til different
+							let currIntervalID = setInterval(
+								releaseNewJournalEntry,
+								20000
+							);
+							// And update the intervalID stored in localStorage
+							localStorage.setItem("intervalID", currIntervalID);
+							console.log(
+								"timeout is set. the lastSubmitTime is ",
+								fetchLocalStorage("lastSubmitTime"),
+								" and the current time is",
+								getCurrentTime()
+							);
+						}
+					}
+				});
+			});
+		</script>
+	</body>
 </html>

@@ -37,7 +37,9 @@ h3 {
 #reset {
 	position:fixed;
 	bottom:calc(2 * var(--gap));
-	right:calc(2 * var(--gap));
+	right:calc(-16 * var(--gap));
+	text-align:left;
+	padding-left:calc(2 * var(--gap));
 }
 #quiz-container {
 	background-color:var(--color6);

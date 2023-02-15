@@ -78,13 +78,14 @@
 						document
 							.getElementById("journal-button")
 							.setAttribute("disabled", true);
+						document.getElementById("disabled-journal-button-alert").classList.remove("invisible");
 						// And if the current time (i.e. date) is "less than" (i.e. after) the last submitted time
 						if (
 							new Date(fetchLocalStorage("lastSubmitTime")) <
 							Date(getCurrentTime())
 						) {
 							// Then release a new journal entry
-							releaseNewJournalEntry();
+							releaseNewJournalEntry(fetchLocalStorage("currPrompt"));
 							localStorage.removeItem("intervalID");
 							// If the date is not "less than"/after the last submitted time
 						} else {

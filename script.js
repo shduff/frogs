@@ -12,14 +12,14 @@ function getCurrentTime() {
 	return time;
 }
 
-function releaseNewJournalEntry() {
+function releaseNewJournalEntry(currPrompt=false) {
 	if (fetchLocalStorage("lastSubmitTime") != getCurrentTime()) {
 		document
 			.getElementById("disabled-journal-button-alert")
 			.classList.toggle("invisible");
 		document.getElementById("journal-button").removeAttribute("disabled");
 		localStorage.setItem("lastSubmitTime", getCurrentTime());
-		updateJournalPage(fetchLocalStorage("cycleStep"));
+		updateJournalPage(fetchLocalStorage("cycleStep"),currPrompt);
 		clearTimeout(Number(fetchLocalStorage("intervalID")));
 		localStorage.removeItem("intervalID");
 		console.log("timeout!");
@@ -27,11 +27,15 @@ function releaseNewJournalEntry() {
 }
 
 // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
-function updateJournalPage(cycleStep) {
+function updateJournalPage(cycleStep, currPrompt=false) {
 	let currFrogType = fetchLocalStorage("frogType");
-	let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
-	localStorage.setItem("currPrompt", randomPrompt);
-	document.getElementById("prompt").innerHTML = prompts[randomPrompt];
+	if (currPrompt) {
+		let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
+		localStorage.setItem("currPrompt", randomPrompt);
+		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
+	} else {
+		document.getElementById("prompt").innerHTML = prompts[fetchLocalStorage("currPrompt")];
+	};
 	frogImgs = allFrogImgs[currFrogType];
 	document.getElementById("frog-img").src =
 		eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
@@ -223,6 +227,8 @@ function createQuiz(data) {
 
 	// When the quiz's submit button is pressed
 	quizButton.addEventListener("click", function (b) {
+		// Set the cycleStep to 1
+		localStorage.setItem("cycleStep", "1");
 		// Grab all the user's answers
 		let answers = Array.from(document.querySelectorAll("input:checked"));
 		// Create an emty list to collect which frog to score
@@ -244,10 +250,6 @@ function createQuiz(data) {
 		)[0];
 		// Then save the frog type in localStorage
 		localStorage.setItem("frogType", frogType);
-		// And set the title of the journal page to reflect the frog type
-		// document.getElementById("frogType").innerHTML = frogNames[frogType];
-		// Set the cycleStep to 1
-		localStorage.setItem("cycleStep", "1");
 		// Update the journal page with the current frog image, fact, and journal prompt
 		updateJournalPage(fetchLocalStorage("cycleStep"));
 		// And continue to update the journal whenever the page is reloaded

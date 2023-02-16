@@ -12,6 +12,16 @@ function getCurrentTime() {
 	return time;
 }
 
+function getCurrFrogDesc() {
+	let frogDesc;
+	data["journalInfo"].forEach((f) => {
+		if (f["frog"] == fetchLocalStorage("frogType")) {
+			frogDesc = f["description"];
+		}
+	});
+	return frogDesc;
+}
+
 function releaseNewJournalEntry(currPrompt=false) {
 	if (fetchLocalStorage("lastSubmitTime") != getCurrentTime()) {
 		document
@@ -22,22 +32,18 @@ function releaseNewJournalEntry(currPrompt=false) {
 		updateJournalPage(fetchLocalStorage("cycleStep"),currPrompt);
 		clearTimeout(Number(fetchLocalStorage("intervalID")));
 		localStorage.removeItem("intervalID");
-		console.log("timeout!");
 	}
 }
 
 // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
 function updateJournalPage(cycleStep, currPrompt=false) {
 	let currFrogType = fetchLocalStorage("frogType");
-	console.log("currPrompt is currently ",currPrompt)
 	if (currPrompt) {
 		document.getElementById("prompt").innerHTML = prompts[eval(fetchLocalStorage("currPrompt"))];
-		console.log("prompt should be set to ",prompts[eval(fetchLocalStorage("currPrompt"))])
 	} else {
 		let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
 		localStorage.setItem("currPrompt", randomPrompt);
 		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
-		console.log("prompt should be set to ",prompts[randomPrompt])
 	};
 	frogImgs = allFrogImgs[currFrogType];
 	document.getElementById("frog-img").src =
@@ -97,22 +103,14 @@ function createQuiz(data) {
 		reset();
 	});
 
-	function getCurrFrogDesc() {
-		let frogDesc;
-		data["journalInfo"].forEach((f) => {
-			if (f["frog"] == fetchLocalStorage("frogType")) {
-				frogDesc = f["description"];
-			}
-		});
-		return frogDesc;
-	}
-
 	// Create the "skip journaling" button to evolve the frog
 	document
 		.getElementById("evolve-frog")
 		.addEventListener("click", function () {
-			localStorage.setItem("cycleStep", "6");
-			updateJournalPage(fetchLocalStorage("cycleStep"));
+			if (eval(fetchLocalStorage("cycleStep")) < 6) {
+				localStorage.setItem("cycleStep", "6");
+				updateJournalPage(fetchLocalStorage("cycleStep"), fetchLocalStorage("currPrompt"));
+			}
 		});
 
 	///////////////////////////////////////////////////////////
@@ -128,9 +126,6 @@ function createQuiz(data) {
 		numAs.forEach((a) => {
 			a.checked ? numCheckedAs++ : null;
 		});
-		console.log("numQs is ", numQs);
-		console.log("numCheckedAs is ", numCheckedAs);
-		console.log(numQs == numCheckedAs);
 		if (numCheckedAs == numQs) {
 			disabledEl.removeAttribute("disabled");
 			let divToHide = document.getElementById(
@@ -232,7 +227,6 @@ function createQuiz(data) {
 	quizButton.addEventListener("click", function (b) {
 		// Set the cycleStep to 1
 		localStorage.setItem("cycleStep", "1");
-		console.log("cycleStep is 1");
 		// Grab all the user's answers
 		let answers = Array.from(document.querySelectorAll("input:checked"));
 		// Create an emty list to collect which frog to score
@@ -352,12 +346,6 @@ function createQuiz(data) {
 		// Then set a timer that compares current time to previous time til different
 		let currIntervalID = setInterval(releaseNewJournalEntry, 10000);
 		localStorage.setItem("intervalID", currIntervalID);
-		console.log(
-			"timeout is set. the lastSubmitTime is ",
-			fetchLocalStorage("lastSubmitTime"),
-			" and the current time is",
-			getCurrentTime()
-		);
 		// Then update the journal page
 		updateJournalPage(fetchLocalStorage("cycleStep"));
 	});

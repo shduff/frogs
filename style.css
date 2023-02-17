@@ -97,6 +97,7 @@ img {
 	width:30vw;
 	height:30vw;
 	border-radius:var(--gap) var(--gap) 0 0;
+	object-fit:cover;
 }
 section, .q, #journal-prompt {
 	display:flex;

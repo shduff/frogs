@@ -227,12 +227,12 @@ function fetchData(callback) {
 		data["journalInfo"].forEach((i) => {
 			let frogName = i["frog"];
 			allFrogImgs[frogName] = {
-				1: i["step1image"][0]["url"],
-				2: i["step2image"][0]["url"],
-				3: i["step3image"][0]["url"],
-				4: i["step4image"][0]["url"],
-				5: i["step5image"][0]["url"],
-				6: i["step6image"][0]["url"],
+				1: i["step1image"],
+				2: i["step2image"],
+				3: i["step3image"],
+				4: i["step4image"],
+				5: i["step5image"],
+				6: i["step6image"],
 			};
 		});
 

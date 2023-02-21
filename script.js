@@ -38,7 +38,7 @@ function releaseNewJournalEntry(currPrompt=false) {
 // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
 function updateJournalPage(cycleStep, currPrompt=false) {
 	let currFrogType = fetchLocalStorage("frogType");
-	if (eval(cycleStep) >= 6) {
+	if (eval(cycleStep) >= 7) {
 		document.getElementById("frog-hidden-title").classList.add("invisible");
 		document.getElementById("frog-reveal-title").classList.remove("invisible");
 		document.getElementById("skip-ahead-text").classList.add("invisible");
@@ -51,15 +51,16 @@ function updateJournalPage(cycleStep, currPrompt=false) {
 		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
 	};
 	frogImgs = allFrogImgs[currFrogType];
+	console.log(frogImgs)
 	document.getElementById("frog-img").src =
-		eval(cycleStep) < 6 ? frogImgs[eval(cycleStep)] : frogImgs[6];
+		eval(cycleStep) < 7 ? frogImgs[eval(cycleStep)] : frogImgs[7];
 	let randomFrogFact = Math.ceil(
 		Math.random() * Object.keys(frogFacts).length
 	);
 	document.getElementById("frog-fact").innerHTML =
-		eval(cycleStep) < 6 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
+		eval(cycleStep) < 7 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
 	// With the user's frogType
-	if (eval(fetchLocalStorage("cycleStep")) >= 6) {
+	if (eval(fetchLocalStorage("cycleStep")) >= 7) {
 		document.getElementById("frogType").innerHTML = frogNames[currFrogType];
 		document
 			.getElementById("frog-link")
@@ -112,10 +113,10 @@ function createQuiz(data) {
 	document
 		.getElementById("evolve-frog")
 		.addEventListener("click", function () {
-			if (eval(fetchLocalStorage("cycleStep")) < 6) {
-				localStorage.setItem("cycleStep", "6");
+			if (eval(fetchLocalStorage("cycleStep")) < 7) {
+				localStorage.setItem("cycleStep", "7");
 				updateJournalPage(fetchLocalStorage("cycleStep"), fetchLocalStorage("currPrompt"));
-				document.getElementById("skip-ahead-text").classList.toggle("invisible");
+				document.getElementById("skip-ahead-text").classList.add("invisible");
 			}
 		});
 
@@ -168,7 +169,8 @@ function createQuiz(data) {
 
 		let j = 1;
 		let qAnswers = [];
-		while (j <= 6) {
+		// tk maybe not this one?
+		while (j <= 7) {
 			if (q["answer" + j] != undefined) {
 				// And make the answers labeled radio buttons
 				let qLabel = document.createElement("label");
@@ -321,14 +323,14 @@ function createQuiz(data) {
 			log.prepend(entry);
 
 			// Progress to the next frog image + cycleFact, until you reach the last frog
-			if (eval(fetchLocalStorage("cycleStep")) < 6) {
+			if (eval(fetchLocalStorage("cycleStep")) < 7) {
 				frogImgDiv.src = frogImgs[eval(fetchLocalStorage("cycleStep"))];
 				let randomFrogFact =
 					Math.floor(Math.random() * Object.keys(frogFacts).length) +
 					1;
 				frogFactDiv.innerHTML = frogFacts[randomFrogFact];
 			} else {
-				frogImgDiv.src = frogImgs[6];
+				frogImgDiv.src = frogImgs[7];
 				let frogDesc;
 				frogFactDiv.innerHTML = getCurrFrogDesc();
 			}

@@ -96,7 +96,8 @@ function fetchData(callback) {
 							step4image: record.get("Step 4 Image"),
 							step5image: record.get("Step 5 Image"),
 							step6image: record.get("Step 6 Image"),
-							fullanimation: record.get("Full Animation"),
+							step7image: record.get("Step 7 Image"),
+							step8image: record.get("Step 8 Image"),
 						});
 					});
 
@@ -233,6 +234,8 @@ function fetchData(callback) {
 				4: i["step4image"],
 				5: i["step5image"],
 				6: i["step6image"],
+				7: i["step7image"],
+				8: i["step8image"],
 			};
 		});
 

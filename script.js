@@ -38,6 +38,11 @@ function releaseNewJournalEntry(currPrompt=false) {
 // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
 function updateJournalPage(cycleStep, currPrompt=false) {
 	let currFrogType = fetchLocalStorage("frogType");
+	if (eval(cycleStep) >= 6) {
+		document.getElementById("frog-hidden-title").classList.add("invisible");
+		document.getElementById("frog-reveal-title").classList.remove("invisible");
+		document.getElementById("skip-ahead-text").classList.add("invisible");
+	}
 	if (currPrompt) {
 		document.getElementById("prompt").innerHTML = prompts[eval(fetchLocalStorage("currPrompt"))];
 	} else {
@@ -110,6 +115,7 @@ function createQuiz(data) {
 			if (eval(fetchLocalStorage("cycleStep")) < 6) {
 				localStorage.setItem("cycleStep", "6");
 				updateJournalPage(fetchLocalStorage("cycleStep"), fetchLocalStorage("currPrompt"));
+				document.getElementById("skip-ahead-text").classList.toggle("invisible");
 			}
 		});
 

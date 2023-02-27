@@ -294,6 +294,7 @@ function createQuiz(data) {
 	journalButton.addEventListener("click", function (b) {
 		// If there is content in the button's associated text area
 		if (b.srcElement.previousElementSibling.value != "") {
+			console.log(b.srcElement.previousElementSibling.value);
 			// Get the current date and time and use it to create a log entry title
 			let entryHeader = document.createElement("div");
 			entryHeader.classList.add("entryHeader");
@@ -349,36 +350,18 @@ function createQuiz(data) {
 				frogFactDiv.innerHTML = getCurrFrogDesc();
 			}
 
-			// And choose a new, random journal prompt
-
-			let randomPrompt = Math.floor(
-				Math.random() * Object.keys(prompts).length
-			);
-
-			while (isRepeatPrompt(randomPrompt)) {
-				randomPrompt = Math.floor(
-					Math.random() * Object.keys(prompts).length
-				);
-				isRepeatPrompt(randomPrompt);
-			}
-
-			localStorage.setItem("currPrompt", randomPrompt);
-			localStorage.setItem("pastPrompts", fetchLocalStorage("pastPrompts") + randomPrompt + ",");
-			document.getElementById("prompt").innerHTML = prompts[randomPrompt];
+			// Disable the submit button
+			b.target.setAttribute("disabled", true);
+			// And show the alert explaining why it's disabled
+			document
+				.getElementById("disabled-journal-button-alert")
+				.classList.toggle("invisible");
+			// Store the current time in local storage
+			localStorage.setItem("lastSubmitTime", getCurrentTime());
+			// Then set a timer that compares current time to previous time til different
+			let currIntervalID = setInterval(releaseNewJournalEntry, 500);
+			localStorage.setItem("intervalID", currIntervalID);
 		}
-
-		// Disable the submit button
-		b.target.setAttribute("disabled", true);
-		// And show the alert explaining why it's disabled
-		document
-			.getElementById("disabled-journal-button-alert")
-			.classList.toggle("invisible");
-		// Store the current time in local storage
-		localStorage.setItem("lastSubmitTime", getCurrentTime());
-		// Then set a timer that compares current time to previous time til different
-		let currIntervalID = setInterval(releaseNewJournalEntry, 500);
-		localStorage.setItem("intervalID", currIntervalID);
-		// Then update the journal page
-		updateJournalPage(fetchLocalStorage("cycleStep"));
+		
 	});
 }

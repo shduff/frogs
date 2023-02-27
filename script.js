@@ -234,7 +234,7 @@ function createQuiz(data) {
 		document.getElementById("entries").innerHTML =
 			fetchLocalStorage("journal");
 		// And the correct journal prompt and frog image for the cycle step they left off at
-		updateJournalPage(fetchLocalStorage("cycleStep"));
+		updateJournalPage(fetchLocalStorage("cycleStep"), fetchLocalStorage("currPrompt"));
 	}
 
 	///////////////////////////////////////////////////////////

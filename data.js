@@ -207,8 +207,8 @@ function fetchData(callback) {
 
 		frogNames = {
 			tomato: "Tomato Frog",
-			milk: "Milk Frog",
-			mimic: "Mimic Frog",
+			milk: "Amazon Milk Frog",
+			mimic: "Mimic Poison Dart Frog",
 			blue: "Blue Poison Dart Frog",
 			red: "Red Eyed Tree Frog",
 			glass: "Glass Frog",

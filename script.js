@@ -23,6 +23,7 @@ function getCurrFrogDesc() {
 }
 
 function releaseNewJournalEntry(currPrompt=false) {
+	console.log("releaseNewJournalEntry ran");
 	if (fetchLocalStorage("lastSubmitTime") != getCurrentTime()) {
 		document
 			.getElementById("disabled-journal-button-alert")
@@ -35,6 +36,14 @@ function releaseNewJournalEntry(currPrompt=false) {
 	}
 }
 
+function isRepeatPrompt(newPromptNum) {
+	if (fetchLocalStorage("pastPrompts").split(",").includes(newPromptNum.toString())) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 // A function that will update the journal when a new prompt response is submitted and when the page is reloaded
 function updateJournalPage(cycleStep, currPrompt=false) {
 	let currFrogType = fetchLocalStorage("frogType");
@@ -44,23 +53,28 @@ function updateJournalPage(cycleStep, currPrompt=false) {
 		document.getElementById("skip-ahead-text").classList.add("invisible");
 	}
 	if (currPrompt) {
+		// console.log(prompts[eval(fetchLocalStorage("currPrompt"))]);
 		document.getElementById("prompt").innerHTML = prompts[eval(fetchLocalStorage("currPrompt"))];
 	} else {
 		let randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
+		while (isRepeatPrompt(randomPrompt)) {
+			randomPrompt = Math.floor(Math.random() * Object.keys(prompts).length);
+		}
 		localStorage.setItem("currPrompt", randomPrompt);
+		localStorage.setItem("pastPrompts", fetchLocalStorage("pastPrompts") + randomPrompt + ",");
 		document.getElementById("prompt").innerHTML = prompts[randomPrompt];
 	};
 	frogImgs = allFrogImgs[currFrogType];
-	console.log(frogImgs)
+	// console.log(frogImgs)
 	document.getElementById("frog-img").src =
-		eval(cycleStep) < 7 ? frogImgs[eval(cycleStep)] : frogImgs[7];
+		eval(cycleStep) <= 7 ? frogImgs[eval(cycleStep)] : frogImgs[8];
 	let randomFrogFact = Math.ceil(
 		Math.random() * Object.keys(frogFacts).length
 	);
 	document.getElementById("frog-fact").innerHTML =
-		eval(cycleStep) < 7 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
+		eval(cycleStep) <= 7 ? frogFacts[randomFrogFact] : getCurrFrogDesc();
 	// With the user's frogType
-	if (eval(fetchLocalStorage("cycleStep")) >= 7) {
+	if (eval(fetchLocalStorage("cycleStep")) >= 8) {
 		document.getElementById("frogType").innerHTML = frogNames[currFrogType];
 		document
 			.getElementById("frog-link")
@@ -336,10 +350,20 @@ function createQuiz(data) {
 			}
 
 			// And choose a new, random journal prompt
+
 			let randomPrompt = Math.floor(
 				Math.random() * Object.keys(prompts).length
 			);
+
+			while (isRepeatPrompt(randomPrompt)) {
+				randomPrompt = Math.floor(
+					Math.random() * Object.keys(prompts).length
+				);
+				isRepeatPrompt(randomPrompt);
+			}
+
 			localStorage.setItem("currPrompt", randomPrompt);
+			localStorage.setItem("pastPrompts", fetchLocalStorage("pastPrompts") + randomPrompt + ",");
 			document.getElementById("prompt").innerHTML = prompts[randomPrompt];
 		}
 
@@ -352,7 +376,7 @@ function createQuiz(data) {
 		// Store the current time in local storage
 		localStorage.setItem("lastSubmitTime", getCurrentTime());
 		// Then set a timer that compares current time to previous time til different
-		let currIntervalID = setInterval(releaseNewJournalEntry, 10000);
+		let currIntervalID = setInterval(releaseNewJournalEntry, 500);
 		localStorage.setItem("intervalID", currIntervalID);
 		// Then update the journal page
 		updateJournalPage(fetchLocalStorage("cycleStep"));

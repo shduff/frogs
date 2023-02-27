@@ -17,8 +17,6 @@
 		<title>Which frog are you?</title>
 	</head>
 	<body>
-		<!-- <button id="reset">reset</button> -->
-
 		<div id="quiz-container" class="container">
 			<h1>What kind of frog are you?</h1>
 			<p class="intro">
@@ -93,7 +91,7 @@
 							// Then set a timer that compares current time to previous time til different
 							let currIntervalID = setInterval(
 								releaseNewJournalEntry,
-								10000
+								500
 							);
 							// And update the intervalID stored in localStorage
 							localStorage.setItem("intervalID", currIntervalID);

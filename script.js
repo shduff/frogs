@@ -23,7 +23,7 @@ function getCurrFrogDesc() {
 }
 
 function releaseNewJournalEntry(currPrompt=false) {
-	console.log("releaseNewJournalEntry ran");
+	// console.log("releaseNewJournalEntry ran");
 	if (fetchLocalStorage("lastSubmitTime") != getCurrentTime()) {
 		document
 			.getElementById("disabled-journal-button-alert")
@@ -101,10 +101,10 @@ function createQuiz(data) {
 				elements[i].checked = false;
 			}
 		}
-		// Reset the journal to have no entries and frogType title to ???, in case of cache
+		// Reset the journal to have no entries and return to the original title, in case of cache
 		document.getElementById("entries").innerHTML =
 			fetchLocalStorage("journal");
-		document.getElementById("frogType").innerHTML = "??? Frog";
+		// document.getElementById("frogType").innerHTML = fetchLocalStorage("frogType");
 		document.getElementById("frog-link").innerHTML = "";
 		// And reset all the frog scores to 0
 		frogScores = {
@@ -123,12 +123,14 @@ function createQuiz(data) {
 		reset();
 	});
 
-	// Create the "skip journaling" button to evolve the frog
+	// Create the "skip ahead" button to evolve the frog
 	document
 		.getElementById("evolve-frog")
 		.addEventListener("click", function () {
-			if (eval(fetchLocalStorage("cycleStep")) < 7) {
-				localStorage.setItem("cycleStep", "7");
+			console.log("cycleStep is ", fetchLocalStorage("cycleStep"));
+			if (eval(fetchLocalStorage("cycleStep")) < 8) {
+				console.log("cycleStep is less than 8");
+				localStorage.setItem("cycleStep", "8");
 				updateJournalPage(fetchLocalStorage("cycleStep"), fetchLocalStorage("currPrompt"));
 				document.getElementById("skip-ahead-text").classList.add("invisible");
 			}
@@ -294,7 +296,7 @@ function createQuiz(data) {
 	journalButton.addEventListener("click", function (b) {
 		// If there is content in the button's associated text area
 		if (b.srcElement.previousElementSibling.value != "") {
-			console.log(b.srcElement.previousElementSibling.value);
+			// console.log(b.srcElement.previousElementSibling.value);
 			// Get the current date and time and use it to create a log entry title
 			let entryHeader = document.createElement("div");
 			entryHeader.classList.add("entryHeader");
